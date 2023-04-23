@@ -5,7 +5,7 @@ createdb:
 	docker exec -it postgres15 createdb --username=root --owner=root simple_bank
 
 dropdb:
-	docker emigxec -it postgres15 dropdb simple_bank
+	docker exec -it postgres15 dropdb simple_bank
 
 migrateup:
 	 migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
@@ -13,4 +13,10 @@ migrateup:
 migratedown:
 	 migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
 
-.PHONY: postgres createdb dropdb migrateup migratedown
+sqlc:
+	sqlc generate
+
+sqlcWindows:
+	docker run --rm -v ${pwd}:/src -w /src kjconroy/sqlc generate
+
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc sqlcWindows
